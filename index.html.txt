@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamSphere - Online Examination</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN PAGE -->
+    <section id="loginPage">
+
+        <header>
+            <div class="logo">Exam<span>Sphere</span></div>
+            <p class="subtitle">Smart Online Examination Portal</p>
+        </header>
+
+        <h2>Student Login</h2>
+
+        <div class="info">
+            Welcome to ExamSphere! Enter your details to begin your examination.
+        </div>
+
+        <form id="loginForm">
+
+            <label>Student Name</label>
+            <input type="text" id="studentName"
+                   placeholder="Enter your full name" required>
+
+            <label>Roll Number</label>
+            <input type="text" id="rollNumber"
+                   placeholder="Enter your roll number" required>
+
+            <button type="submit" class="primary">
+                Login & Continue →
+            </button>
+
+        </form>
+
+        <div class="footer">
+            © 2026 ExamSphere | Online Examination System
+        </div>
+
+    </section>
+
+    <section id="instructionPage" class="hidden">
+
+        <header>
+            <div class="logo">Exam<span>Sphere</span></div>
+        </header>
+
+        <h2>Examination Instructions</h2>
+
+        <div class="info">
+            <p>1. The examination contains 10 multiple-choice questions.</p>
+            <p>2. Each question carries 1 mark.</p>
+            <p>3. There is no negative marking.</p>
+            <p>4. Total examination time is 10 minutes.</p>
+            <p>5. The exam will be submitted automatically when time ends.</p>
+            <p>6. You can submit before the timer ends.</p>
+        </div>
+
+        <button class="primary" onclick="startExam()">
+            Start Examination
+        </button>
+
+    </section>
+
+    <section id="examPage" class="hidden">
+
+        <div class="exam-top">
+
+            <div>
+                <h2>Online Examination</h2>
+                <p id="welcomeText"></p>
+            </div>
+
+            <div class="timer" id="timer">10:00</div>
+
+        </div>
+
+        <p id="progressText">Answered: 0 / 10</p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <form id="examForm">
+
+            <div id="questions"></div>
+
+            <button type="submit" class="primary">
+                Submit Examination
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section id="resultPage" class="hidden result">
+
+        <header>
+            <div class="logo">Exam<span>Sphere</span></div>
+            <h2>Examination Completed!</h2>
+        </header>
+
+        <p id="resultStudent"></p>
+
+        <div class="score" id="score">0/10</div>
+
+        <h3 id="resultMessage"></h3>
+
+        <div class="result-box">
+
+            <p><b>Total Questions:</b> 10</p>
+
+            <p><b>Correct Answers:</b>
+                <span id="correct"></span>
+            </p>
+
+            <p><b>Wrong Answers:</b>
+                <span id="wrong"></span>
+            </p>
+
+            <p><b>Unanswered:</b>
+                <span id="unanswered"></span>
+            </p>
+
+            <p><b>Percentage:</b>
+                <span id="percentage"></span>%
+            </p>
+
+        </div>
+
+        <button onclick="restartExam()" class="primary">
+            Take Another Exam
+        </button>
+
+        <div class="footer">
+            Thank you for using ExamSphere!
+        </div>
+
+    </section>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
