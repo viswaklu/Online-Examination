@@ -1,0 +1,330 @@
+
+// EXAM QUESTIONS
+
+const quiz = [
+
+    {
+        question: "Which language is used to structure web pages?",
+        options: ["CSS", "HTML", "Java", "Python"],
+        answer: 1
+    },
+
+    {
+        question: "Which language is used for styling web pages?",
+        options: ["HTML", "Java", "CSS", "C"],
+        answer: 2
+    },
+
+    {
+        question: "Which language adds interactivity to websites?",
+        options: ["JavaScript", "HTML", "SQL", "CSS"],
+        answer: 0
+    },
+
+    {
+        question: "What does CPU stand for?",
+        options: [
+            "Central Processing Unit",
+            "Computer Personal Unit",
+            "Central Program Utility",
+            "Control Processing User"
+        ],
+        answer: 0
+    },
+
+    {
+        question: "Which tag creates a hyperlink in HTML?",
+        options: ["<p>", "<a>", "<h1>", "<img>"],
+        answer: 1
+    },
+
+    {
+        question: "Which symbol is used for comments in JavaScript?",
+        options: ["<!-- -->", "//", "**", "##"],
+        answer: 1
+    },
+
+    {
+        question: "Which keyword declares a constant in JavaScript?",
+        options: ["var", "let", "const", "static"],
+        answer: 2
+    },
+
+    {
+        question: "Which HTML tag displays an image?",
+        options: ["<image>", "<picture>", "<img>", "<src>"],
+        answer: 2
+    },
+
+    {
+        question: "Which CSS property changes text color?",
+        options: ["font-size", "color", "background", "text-style"],
+        answer: 1
+    },
+
+    {
+        question: "What does URL stand for?",
+        options: [
+            "Uniform Resource Locator",
+            "Universal Reference Link",
+            "Unified Resource Language",
+            "Uniform Reading Location"
+        ],
+        answer: 0
+    }
+
+];
+
+
+// GLOBAL VARIABLES
+
+let student = "";
+let roll = "";
+let timeLeft = 600;
+let timerInterval;
+let submitted = false;
+
+
+// PAGE SWITCHING
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".container section")
+        .forEach(section => section.classList.add("hidden"));
+
+    document.getElementById(pageId)
+        .classList.remove("hidden");
+
+}
+
+
+// STUDENT LOGIN
+
+document.getElementById("loginForm")
+    .addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        student = document.getElementById("studentName").value.trim();
+
+        roll = document.getElementById("rollNumber").value.trim();
+
+        if (!student || !roll) {
+            alert("Please enter your details.");
+            return;
+        }
+
+        showPage("instructionPage");
+
+    });
+
+
+// START EXAMINATION
+
+function startExam() {
+
+    showPage("examPage");
+
+    document.getElementById("welcomeText").textContent =
+        "Student: " + student + " | Roll No: " + roll;
+
+    loadQuestions();
+
+    timeLeft = 600;
+
+    submitted = false;
+
+    updateTimer();
+
+    timerInterval = setInterval(function() {
+
+        timeLeft--;
+
+        updateTimer();
+
+        if (timeLeft <= 0) {
+
+            clearInterval(timerInterval);
+
+            alert("Time is over! Your examination will be submitted.");
+
+            calculateResult();
+
+        }
+
+    }, 1000);
+
+}
+
+
+// DISPLAY QUESTIONS
+
+function loadQuestions() {
+
+    const container = document.getElementById("questions");
+
+    container.innerHTML = "";
+
+    quiz.forEach((q, index) => {
+
+        let html = `
+            <div class="question">
+                <h3>${index + 1}. ${q.question}</h3>
+        `;
+
+        q.options.forEach((option, i) => {
+
+            html += `
+                <label class="option">
+                    <input type="radio"
+                        name="q${index}"
+                        value="${i}"
+                        onchange="updateProgress()">
+                    ${option}
+                </label>
+            `;
+
+        });
+
+        html += `</div>`;
+
+        container.innerHTML += html;
+
+    });
+
+    updateProgress();
+
+}
+
+
+// UPDATE PROGRESS BAR
+
+function updateProgress() {
+
+    let answered = 0;
+
+    quiz.forEach((q, i) => {
+
+        if (document.querySelector(
+            'input[name="q' + i + '"]:checked'
+        )) {
+
+            answered++;
+
+        }
+
+    });
+
+    document.getElementById("progressText").textContent =
+        "Answered: " + answered + " / " + quiz.length;
+
+    document.getElementById("progressBar").style.width =
+        (answered / quiz.length * 100) + "%";
+
+}
+
+
+// COUNTDOWN TIMER
+
+function updateTimer() {
+
+    let minutes = Math.floor(timeLeft / 60);
+
+    let seconds = timeLeft % 60;
+
+    document.getElementById("timer").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+
+}
+
+
+// SUBMIT EXAMINATION
+
+document.getElementById("examForm")
+    .addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        calculateResult();
+
+    });
+
+
+// AUTOMATIC RESULT CALCULATION
+
+function calculateResult() {
+
+    if (submitted) return;
+
+    submitted = true;
+
+    clearInterval(timerInterval);
+
+    let correct = 0;
+
+    let unanswered = 0;
+
+    quiz.forEach((q, index) => {
+
+        let selected = document.querySelector(
+            'input[name="q' + index + '"]:checked'
+        );
+
+        if (!selected) {
+
+            unanswered++;
+
+        }
+
+        else if (Number(selected.value) === q.answer) {
+
+            correct++;
+
+        }
+
+    });
+
+    let wrong = quiz.length - correct - unanswered;
+
+    let percentage = (correct / quiz.length) * 100;
+
+
+    // DISPLAY RESULTS
+
+    document.getElementById("score").textContent =
+        correct + "/" + quiz.length;
+
+    document.getElementById("correct").textContent = correct;
+
+    document.getElementById("wrong").textContent = wrong;
+
+    document.getElementById("unanswered").textContent = unanswered;
+
+    document.getElementById("percentage").textContent =
+        percentage.toFixed(1);
+
+    document.getElementById("resultStudent").textContent =
+        "Student: " + student + " | Roll No: " + roll;
+
+    document.getElementById("resultMessage").textContent =
+        percentage >= 80 ? "Excellent Performance!" :
+        percentage >= 50 ? "Good Job! Keep Practicing!" :
+        "Keep Learning and Try Again!";
+
+    showPage("resultPage");
+
+}
+
+
+// RESTART EXAMINATION
+
+function restartExam() {
+
+    clearInterval(timerInterval);
+
+    document.getElementById("loginForm").reset();
+
+    showPage("loginPage");
+
+}
